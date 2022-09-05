@@ -6,7 +6,14 @@ const FEEDBACK_KEY = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
 const email = document.querySelector('.feedback-form input');
 const message = document.querySelector('.feedback-form textarea');
-const feedbackFormData = {};
+const feedbackFormData = checkStorage();
+
+function checkStorage() {
+    if(localStorage.getItem(FEEDBACK_KEY)){
+        return JSON.parse(localStorage.getItem(FEEDBACK_KEY));
+    }
+    return {};
+}
 
 fillEmailField();
 fillMessageField();
@@ -28,8 +35,9 @@ message.addEventListener('input', throttle(onMessageInput, 500))
 function onEmailInput(event) {
     const emailName = event.target.name;
     const value = event.target.value;
-    feedbackFormData[emailName] = value;
+    feedbackFormData.email = value;
     localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedbackFormData));
+    console.log(feedbackFormData);
 
 };
 
@@ -38,19 +46,27 @@ function onMessageInput(event) {
     const value = event.target.value;
     feedbackFormData[messageKey] = value;
     localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedbackFormData));
+    console.log(feedbackFormData);
 };
 
 function fillEmailField() {
-    const savedValue = localStorage.getItem(FEEDBACK_KEY);
+    const savedValue = JSON.parse(localStorage.getItem(FEEDBACK_KEY))
+
     if(savedValue){
-        email.value = JSON.parse(localStorage.getItem(FEEDBACK_KEY)).email;
+        if(savedValue.email){
+            email.value = JSON.parse(localStorage.getItem(FEEDBACK_KEY)).email;
+        }}else{
+            email.value = '';
         };
 };
 
 function fillMessageField() {
-    const savedValue = localStorage.getItem(FEEDBACK_KEY);
+    const savedValue = JSON.parse(localStorage.getItem(FEEDBACK_KEY));
     if(savedValue){
-        message.value = JSON.parse(localStorage.getItem(FEEDBACK_KEY)).message;
+        if(savedValue.message){
+            message.value = JSON.parse(localStorage.getItem(FEEDBACK_KEY)).message;
+        }}else{
+            message.value = '';
         };
-}
+};
 
